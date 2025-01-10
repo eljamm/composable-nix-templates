@@ -1,7 +1,20 @@
 { self, ... }:
 {
   flake.templates = {
-    default = self.templates.rust;
+    default = self.templates.basic;
+
+    basic = {
+      path = ./basic;
+      description = "Basic project";
+      welcomeText = ''
+        # Basic Project
+        ## Intended usage
+        A basic template, leveraging [Flake Parts](https://flake.parts), for
+        easier project composition.
+
+        Enter the development environment with `nix develop`.
+      '';
+    };
 
     rust = {
       path = ./rust;
