@@ -6,8 +6,6 @@
     git-hooks-nix = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
-      # remove if `inputs.nixpkgs` is not set to a stable branch
-      inputs.nixpkgs-stable.follows = "nixpkgs";
     };
 
     treefmt-nix = {
