@@ -34,5 +34,10 @@
         - [Rust on the NixOS Wiki](https://nixos.wiki/wiki/Rust)
       '';
     };
+
+    go = {
+      path = ./go;
+      description = "Basic Go project";
+    };
   };
 }
