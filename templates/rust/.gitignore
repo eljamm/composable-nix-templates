@@ -1,4 +1,4 @@
-# --- Rust --- #
+## Rust ##
 # compiled files and executables
 debug/
 target/
@@ -12,7 +12,7 @@ target/
 # https://github.com/Canop/bacon
 .bacon-locations
 
-# --- Nix --- #
+## Nix ##
 result*
 
 # https://github.com/nix-community/nix-direnv
