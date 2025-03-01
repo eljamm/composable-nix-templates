@@ -19,6 +19,7 @@
           cargo-auditable
           cargo-tarpaulin # code coverage
           cargo-udeps # unused deps
+          bacon
         ];
       };
     };
