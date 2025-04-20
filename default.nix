@@ -52,7 +52,9 @@ in
   flake.packages = packages;
 
   flake.devShells.default = pkgs.mkShellNoCC {
-    packages = builtins.attrValues packages;
+    packages = (builtins.attrValues packages) ++ [
+      pkgs.ffizer
+    ];
   };
 }
 // packages-bin
