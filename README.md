@@ -67,3 +67,11 @@ Similarly to the example above, you can generate a Rust template with:
 ```shellSession
 bash $(nix-build -A rust) test/rust --update-mode override
 ```
+
+# TODO
+
+- [ ] CI/CD workflows
+  - [ ] template verification
+  - [ ] process documentation
+- [ ] Refactor templates
+- [ ] Improve documentation
