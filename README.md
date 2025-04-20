@@ -1,9 +1,7 @@
 # Description
 
-This project presents a more flexible alternative to using flake templates (which is just a fancy way to `cp -r`).
+This project presents a more flexible alternative to using flake templates (which is just a fancy way to `cp -r`).<br>
 By leveraging the [ffizer](https://github.com/ffizer/ffizer) scaffolding tool, you'll be able to create updateable templates with custom parameters and composable files.
-
-For more details regarding the templating sytax and command-line arguments used throughout this project, check out [ffizer's documentation](https://ffizer.github.io/ffizer/book/overview.html).
 
 <!-- `$ tree -L 4 --noreport --dirsfirst templates/` as shellSession -->
 
@@ -36,6 +34,8 @@ templates/
     ├── Cargo.lock
     └── Cargo.toml
 ```
+
+For more details regarding the templating sytax and command-line arguments used throughout this project, check out [ffizer's documentation](https://ffizer.github.io/ffizer/book/overview.html).
 
 # Usage
 
