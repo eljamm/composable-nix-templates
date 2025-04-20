@@ -19,14 +19,8 @@ let
   getTemplates = dir: filterAttrs (_: type: type == "directory") (builtins.readDir dir);
 
   templates = getTemplates ./templates;
-in
-{
-  inherit
-    lib
-    self
-    ;
 
-  flake.packages = mapAttrs' (
+  packages = mapAttrs' (
     name: _:
     nameValuePair name (
       pkgs.writeShellScriptBin "ffizer-${name}" ''
@@ -45,9 +39,20 @@ in
     )
   ) templates;
 
+  packages-bin = lib.mapAttrs (
+    name: value: pkgs.writeScript "${name}-bin" "${lib.getExe value} \"$@\""
+  ) packages;
+in
+{
+  inherit
+    lib
+    self
+    ;
+
+  flake.packages = packages;
+
   flake.devShells.default = pkgs.mkShellNoCC {
-    packages = [
-      (builtins.attrValues self.flake.packages)
-    ];
+    packages = builtins.attrValues packages;
   };
 }
+// packages-bin
