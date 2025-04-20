@@ -1,3 +1,4 @@
+{{ input_content }}
 ## Rust ##
 # compiled files and executables
 debug/
@@ -11,6 +12,3 @@ target/
 
 # https://github.com/Canop/bacon
 .bacon-locations
-
-## Nix ##
-{{read_to_str "templates/basic/.gitignore"}}
