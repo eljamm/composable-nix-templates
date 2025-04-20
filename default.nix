@@ -1,5 +1,4 @@
 {
-  self ? import ./. { },
   inputs ? import (fetchTarball "https://github.com/fricklerhandwerk/flake-inputs/tarball/main") {
     root = ./.;
   },
@@ -8,6 +7,8 @@
   lib ? import "${inputs.nixpkgs}/lib",
 }:
 let
+  self = import ./. { inherit inputs system; };
+
   inherit (lib)
     filterAttrs
     getExe
