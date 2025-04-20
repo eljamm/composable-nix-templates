@@ -3,15 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
-    inputs@{ nixpkgs, ... }:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = nixpkgs.lib.systems.flakeExposed;
-
+    { flake-utils, ... }@inputs:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       # get flake attributes from default.nix
-      perSystem = { system, ... }: (import ./default.nix { inherit inputs system; }).flake;
-    };
+      (import ./default.nix { inherit inputs system; }).flake
+    );
 }
