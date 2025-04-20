@@ -9,7 +9,7 @@ variables:
         value: "unstable"
   - name: language
     ask: "Choose a template"
-    default_value: "{{file_name ffizer_dst_folder}}"
+    default_value: "{{file_name ffizer_src_uri}}"
     hidden: "true"
     select_in_values:
       - label: "Basic"
