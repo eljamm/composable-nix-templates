@@ -1,8 +1,8 @@
 # Description
 
-This project presents a more flexible alternative to using flake templates (which is just fancy `cp -r`) and leverages [ffizer](https://github.com/ffizer/ffizer) to allow you to define custom parameters and compose files across different templates.
+This project presents a more flexible alternative to using flake templates (which is just a fancy way to`cp -r`) and leverages [ffizer](https://github.com/ffizer/ffizer) to allow you to define custom parameters and compose files across different templates.
 
-Check out the [ffizer documentation](https://ffizer.github.io/ffizer/book/overview.html) for more details on the templating sytax and command-line arguments.
+Check out [ffizer's documentation](https://ffizer.github.io/ffizer/book/overview.html) for more details on the templating sytax and command-line arguments.
 
 | Templates |
 |-----------|
@@ -25,7 +25,7 @@ nix run github:eljamm/nix-templates#rust -- test/rust --update-mode override
 
 or locally:
 
-```
+```shellSession
 nix run .#rust -- test/rust --update-mode override
 ```
 
