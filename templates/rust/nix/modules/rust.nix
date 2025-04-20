@@ -4,7 +4,6 @@
     {
       system,
       pkgs,
-      self',
       ...
     }:
     {
@@ -28,12 +27,6 @@
         toolchains.nightly = pkgs.rust-bin.selectLatestNightlyWith (
           toolchain: toolchain.minimal.override { inherit extensions; }
         );
-      };
-
-      devShells.rust = pkgs.mkShell {
-        packages = [
-          self'.legacyPackages.rust.toolchains.nightly
-        ];
       };
     };
 

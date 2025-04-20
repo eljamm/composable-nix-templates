@@ -1,0 +1,27 @@
+variables:
+  - name: nixpkgs_version
+    ask: "Choose nixpkgs version"
+    default_value: "Stable (24.11)"
+    select_in_values:
+      - label: "Stable (24.11)"
+        value: "24.11"
+      - label: "Unstable"
+        value: "unstable"
+  - name: language
+    ask: "Choose a template"
+    default_value: "{{file_name ffizer_dst_folder}}"
+    hidden: "true"
+    select_in_values:
+      - label: "Basic"
+        value: "basic"
+      - label: "Rust"
+        value: "rust"
+      - label: "Go"
+        value: "go"
+scripts:
+  - default_confirm_answer: "true"
+    cmd: |
+      # clean up templating comments
+      fd --type f -x sed -i '/^.*# ---.*$/d' {}
+      # format files
+      nix fmt

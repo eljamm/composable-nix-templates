@@ -1,5 +1,6 @@
 {
   lib,
+  callPackage,
   writeShellApplication,
   ...
 }:

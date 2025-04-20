@@ -10,6 +10,12 @@
     {
       treefmt.projectRootFile = "flake.nix";
       treefmt.programs.nixfmt.enable = true;
+
+      # --- {{#if (eq language "rust") }}
+      treefmt.programs.rustfmt.enable = true;
+      treefmt.programs.taplo.enable = true; # TOML
+      # --- {{/if}}
+      # --- {{#if (eq language "go") }}
       treefmt.settings.formatter = {
         "gofumpt" = {
           command = "${lib.getExe pkgs.gofumpt}";
@@ -27,6 +33,7 @@
           excludes = [ "vendor/*" ];
         };
       };
+      # --- {{/if}}
 
       pre-commit.check.enable = true;
       pre-commit.settings.hooks.treefmt.enable = true;

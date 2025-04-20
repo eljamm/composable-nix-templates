@@ -1,5 +1,5 @@
 {
-  description = "Nix flake templates for the Lazy";
+  description = "Nix templates for the Lazy";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -11,6 +11,5 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = nixpkgs.lib.systems.flakeExposed;
 
-      imports = [ ./templates ];
     };
 }

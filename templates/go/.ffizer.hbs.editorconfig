@@ -1,0 +1,4 @@
+{{read_to_str "templates/basic/.editorconfig"}}
+[*.go]
+indent_style = tab
+indent_size = 4

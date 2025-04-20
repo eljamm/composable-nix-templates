@@ -1,7 +1,18 @@
 {
+  description = "Basic {{language}} flake";
+
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-{{nixpkgs_version}}";
     flake-parts.url = "github:hercules-ci/flake-parts";
+
+    # --- {{#if (eq language "rust") }}
+    crane.url = "github:ipetkov/crane";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # --- {{/if}}
 
     git-hooks-nix = {
       url = "github:cachix/git-hooks.nix";
