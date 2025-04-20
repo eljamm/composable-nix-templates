@@ -1,15 +1,13 @@
 {
+  self ? import ./. { },
   inputs ? import (fetchTarball "https://github.com/fricklerhandwerk/flake-inputs/tarball/main") {
     root = ./.;
   },
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs { inherit system; },
+  lib ? import "${inputs.nixpkgs}/lib",
 }:
 let
-  inherit (pkgs)
-    lib
-    ;
-
   inherit (lib)
     filterAttrs
     getExe
@@ -22,6 +20,11 @@ let
   templates = getTemplates ./templates;
 in
 {
+  inherit
+    lib
+    self
+    ;
+
   flake.packages = mapAttrs' (
     name: _:
     nameValuePair name (
@@ -40,4 +43,10 @@ in
       ''
     )
   ) templates;
+
+  flake.devShells.default = pkgs.mkShellNoCC {
+    packages = [
+      (builtins.attrValues self.flake.packages)
+    ];
+  };
 }
