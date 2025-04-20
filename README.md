@@ -1,26 +1,15 @@
 # Description
 
-Compose nix templates using [ffizer](https://github.com/ffizer/ffizer).
+This project presents a more flexible alternative to using flake templates (which is just fancy `cp -r`) and leverages [ffizer](https://github.com/ffizer/ffizer) to allow you to define custom parameters and compose files across different templates.
+
+Check out the [ffizer documentation](https://ffizer.github.io/ffizer/book/overview.html) for more details on the templating sytax and command-line arguments.
 
 | Templates |
 |-----------|
 | rust      |
 | go        |
-| basic     |
 
 # Usage
-
-## Without flakes
-
-```shellSession
-bash $(nix-build -A <template_name>) <output_directory> <args>
-```
-
-Examples:
-
-```shellSession
-bash $(nix-build -A rust) test/rust --update-mode override
-```
 
 ## Flakes
 
@@ -28,11 +17,26 @@ bash $(nix-build -A rust) test/rust --update-mode override
 nix run .#<template_name> -- <output_directory> <args>
 ```
 
-Examples:
+For example, to generate a Rust template without installing the project, run:
 
 ```shellSession
-# Try without installing
 nix run github:eljamm/nix-templates#rust -- test/rust --update-mode override
+```
 
+or locally:
+
+```
 nix run .#rust -- test/rust --update-mode override
+```
+
+## Without flakes
+
+```shellSession
+bash $(nix-build -A <template_name>) <output_directory> <args>
+```
+
+Similarly to the example above, you can generate a Rust template with:
+
+```shellSession
+bash $(nix-build -A rust) test/rust --update-mode override
 ```
