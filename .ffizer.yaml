@@ -18,10 +18,13 @@ variables:
         value: "rust"
       - label: "Go"
         value: "go"
+ignores:
+  - .git
 scripts:
   - default_confirm_answer: "true"
     cmd: |
       # clean up templating comments
       fd --type f -x sed -i '/^.*# ---.*$/d' {}
+
       # format files
       nix fmt
