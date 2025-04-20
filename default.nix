@@ -18,9 +18,13 @@ let
 
   getTemplates = dir: filterAttrs (_: type: type == "directory") (builtins.readDir dir);
 
+  process-docs = pkgs.writeShellScriptBin "process-docs" ''
+    ${lib.getExe pkgs.mdsh}
+  '';
+
   templates = getTemplates ./templates;
 
-  packages = mapAttrs' (
+  ffizer-packages = mapAttrs' (
     name: _:
     nameValuePair name (
       pkgs.writeShellScriptBin "ffizer-${name}" ''
@@ -38,7 +42,9 @@ let
       ''
     )
   ) templates;
-
+  packages = ffizer-packages // {
+    inherit process-docs;
+  };
   packages-bin = lib.mapAttrs (
     name: value: pkgs.writeScript "${name}-bin" "${lib.getExe value} \"$@\""
   ) packages;
@@ -54,6 +60,7 @@ in
   flake.devShells.default = pkgs.mkShellNoCC {
     packages = (builtins.attrValues packages) ++ [
       pkgs.ffizer
+      pkgs.mdsh
     ];
   };
 }

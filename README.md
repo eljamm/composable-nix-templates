@@ -4,6 +4,8 @@ This project presents a more flexible alternative to using flake templates (whic
 
 Check out [ffizer's documentation](https://ffizer.github.io/ffizer/book/overview.html) for more details on the templating sytax and command-line arguments.
 
+<!-- `$ tree -L 4 --noreport --dirsfirst templates/` as shellSession -->
+
 ```shellSession
 templates/
 ├── basic
