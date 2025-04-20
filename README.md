@@ -4,10 +4,35 @@ This project presents a more flexible alternative to using flake templates (whic
 
 Check out [ffizer's documentation](https://ffizer.github.io/ffizer/book/overview.html) for more details on the templating sytax and command-line arguments.
 
-| Templates |
-|-----------|
-| rust      |
-| go        |
+```shellSession
+templates/
+├── basic
+│   ├── nix
+│   │   ├── modules
+│   │   │   ├── aliases.ffizer.hbs.nix
+│   │   │   ├── devShells.ffizer.hbs.nix
+│   │   │   ├── formatting.ffizer.hbs.nix
+│   │   │   └── infra.ffizer.hbs.nix
+│   │   └── lib.nix
+│   ├── flake.ffizer.hbs.nix
+│   └── statix.toml
+├── go
+│   └── _basic -> ../basic
+└── rust
+    ├── _basic -> ../basic
+    ├── nix
+    │   ├── crates
+    │   │   ├── default.nix
+    │   │   └── hello.nix
+    │   ├── modules
+    │   │   └── rust.nix
+    │   └── lib.nix
+    ├── src
+    │   └── main.rs
+    ├── bacon.toml
+    ├── Cargo.lock
+    └── Cargo.toml
+```
 
 # Usage
 
