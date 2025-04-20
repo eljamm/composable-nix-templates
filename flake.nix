@@ -11,5 +11,7 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = nixpkgs.lib.systems.flakeExposed;
 
+      # get flake attributes from default.nix
+      perSystem = { system, ... }: (import ./default.nix { inherit inputs system; }).flake;
     };
 }
