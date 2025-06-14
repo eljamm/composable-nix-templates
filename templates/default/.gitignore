@@ -1,0 +1,8 @@
+## Nix
+result*
+
+# https://github.com/nix-community/nix-direnv
+.direnv*
+
+# https://github.com/fricklerhandwerk/git-hooks
+.pre-commit-config.yaml

@@ -14,7 +14,11 @@ in
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs {
     config = { };
-    overlays = [ ];
+    ## {{#if (eq template_name "rust-nix")}}
+    #! overlays = [ inputs.rust-overlay.overlays.default ];
+    ## {{else}}
+    #! overlays = [ ];
+    ## {{/if}}
     inherit system;
   },
   lib ? import "${inputs.nixpkgs}/lib",
@@ -24,6 +28,7 @@ let
     inherit
       lib
       pkgs
+      self
       system
       inputs
       ;
@@ -43,5 +48,7 @@ let
     flake.devShells.default = shell;
     flake.formatter = formatter;
   };
+
+  "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
 in
 default // args

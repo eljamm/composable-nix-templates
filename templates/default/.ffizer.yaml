@@ -1,0 +1,27 @@
+variables:
+  - name: nixpkgs_version
+    ask: "Choose nixpkgs version"
+    default_value: "Stable (25.05)"
+    select_in_values:
+      - label: "Stable (25.05)"
+        value: "25.05"
+      - label: "Unstable"
+        value: "unstable"
+  - name: template_name
+    ask: "Choose a template"
+    default_value: "{{file_name ffizer_src_uri}}"
+    hidden: "true"
+    select_in_values:
+      - label: "Default"
+        value: "default"
+      - label: "Rust"
+        value: "rust"
+ignores:
+  - .git
+scripts:
+  - default_confirm_answer: "true"
+    cmd: |
+      ./dev/cleanup.sh && rm ./dev/cleanup.sh
+
+      # format files
+      # nix fmt
