@@ -30,4 +30,4 @@ for token in "${!deletions[@]}"; do
     sed_command+="/^.*$(escape_token "$token").*$/d; "
 done
 
-fd --type f -x sed -i -e "$sed_command" {}
+fd --type f -e nix -x sed -i -e "$sed_command" {}

@@ -24,4 +24,4 @@ scripts:
       ./dev/cleanup.sh && rm ./dev/cleanup.sh
 
       # format files
-      # nix fmt
+      nix fmt
