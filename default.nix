@@ -1,67 +1,47 @@
+let
+  flake-inputs = import (
+    fetchTarball "https://github.com/fricklerhandwerk/flake-inputs/tarball/4.1.0"
+  );
+  inherit (flake-inputs)
+    import-flake
+    ;
+in
 {
-  inputs ? import (fetchTarball "https://github.com/fricklerhandwerk/flake-inputs/tarball/main") {
-    root = ./.;
+  self ? import-flake {
+    src = ./.;
   },
+  inputs ? self.inputs,
   system ? builtins.currentSystem,
-  pkgs ? import inputs.nixpkgs { inherit system; },
+  pkgs ? import inputs.nixpkgs {
+    config = { };
+    overlays = [ ];
+    inherit system;
+  },
   lib ? import "${inputs.nixpkgs}/lib",
 }:
 let
-  self = import ./. { inherit inputs system; };
-
-  inherit (lib)
-    filterAttrs
-    getExe
-    mapAttrs'
-    nameValuePair
-    ;
-
-  getTemplates = dir: filterAttrs (_: type: type == "directory") (builtins.readDir dir);
-
-  process-docs = pkgs.writeShellScriptBin "process-docs" ''
-    ${lib.getExe pkgs.mdsh}
-  '';
-
-  templates = getTemplates ./templates;
-
-  ffizer-packages = mapAttrs' (
-    name: _:
-    nameValuePair name (
-      pkgs.writeShellScriptBin "ffizer-${name}" ''
-        export SOURCE_DIR="${./.}"
-        export TEMPLATES_DIR="/tmp/ffizer-${name}"
-
-        cp -R "$SOURCE_DIR/." "$TEMPLATES_DIR"
-        chmod -R +w "$TEMPLATES_DIR"
-
-        ${getExe pkgs.ffizer} apply \
-          --source "$TEMPLATES_DIR"/templates/${name} \
-          --destination "$@"
-
-        rm -rf "$TEMPLATES_DIR"
-      ''
-    )
-  ) templates;
-  packages = ffizer-packages // {
-    inherit process-docs;
+  args = {
+    inherit
+      lib
+      self
+      pkgs
+      system
+      inputs
+      ;
   };
-  packages-bin = lib.mapAttrs (
-    name: value: pkgs.writeScript "${name}-bin" "${lib.getExe value} \"$@\""
-  ) packages;
+
+  default = rec {
+    packages = import ./dev/packages.nix args;
+
+    shell = pkgs.mkShellNoCC {
+      packages = (builtins.attrValues packages) ++ [
+        pkgs.ffizer
+        pkgs.mdsh
+      ];
+    };
+
+    flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages;
+    flake.devShells.default = shell;
+  };
 in
-{
-  inherit
-    lib
-    self
-    ;
-
-  flake.packages = packages;
-
-  flake.devShells.default = pkgs.mkShellNoCC {
-    packages = (builtins.attrValues packages) ++ [
-      pkgs.ffizer
-      pkgs.mdsh
-    ];
-  };
-}
-// packages-bin
+default // args
