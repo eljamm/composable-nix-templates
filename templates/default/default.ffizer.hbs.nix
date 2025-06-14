@@ -37,18 +37,18 @@ let
   formatter = import ./dev/formatter.nix args;
 
   default = rec {
+    "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
+
     packages = { };
     shell = pkgs.mkShellNoCC {
       packages = [
         formatter
-      ];
+      ] ++ "!{{template_name}}!".packages or [ ];
     };
 
     flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages;
     flake.devShells.default = shell;
     flake.formatter = formatter;
   };
-
-  "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
 in
 default // args
