@@ -19,23 +19,21 @@ templates/
 │   └── statix.toml
 ├── default
 │   ├── dev
+│   │   ├── cleanup.sh
 │   │   └── formatter.nix
-│   ├── default.nix
-│   └── flake.nix
+│   ├── default.ffizer.hbs.nix
+│   └── flake.ffizer.hbs.nix
 ├── go
 │   └── _basic -> ../basic
 └── rust
-    ├── _basic -> ../basic
-    ├── nix
+    ├── _default -> ../default
+    ├── dev
     │   ├── crates
     │   │   ├── default.nix
     │   │   └── hello.nix
-    │   ├── modules
-    │   │   └── rust.nix
-    │   └── lib.nix
+    │   └── {{template_name}}.ffizer.hbs.nix
     ├── src
     │   └── main.rs
-    ├── bacon.toml
     ├── Cargo.lock
     └── Cargo.toml
 ```
