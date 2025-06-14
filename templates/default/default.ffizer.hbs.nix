@@ -32,6 +32,10 @@ let
       system
       inputs
       ;
+    inherit (default)
+      packages
+      ;
+    devShells = default.shells;
   };
 
   formatter = import ./dev/formatter.nix args;
@@ -41,19 +45,13 @@ let
 
     packages = { };
 
-    shells.default = pkgs.mkShellNoCC {
-      packages = [
-        formatter
-      ];
-    };
-    ## {{#if (eq template_name "rust-nix")}}
-    shells.dev = pkgs.mkShellNoCC {
-      packages = shells.default.nativeBuildInputs ++ "!{{template_name}}!".packages.dev or [ ];
-    };
-    shells.ci = pkgs.mkShellNoCC {
-      packages = "!{{template_name}}!".packages.ci or [ ];
-    };
-    ## {{/if}}
+    shells = {
+      default = pkgs.mkShellNoCC {
+        packages = [
+          formatter
+        ];
+      };
+    } // "!{{template_name}}!".shells or { };
 
     flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages;
     flake.devShells = shells;

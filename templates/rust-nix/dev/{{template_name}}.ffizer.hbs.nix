@@ -1,4 +1,5 @@
 {
+  devShells,
   pkgs,
   ...
 }:
@@ -9,13 +10,23 @@ rec {
       cargo-auditable
     ];
     dev = default ++ [
-      cargo-tarpaulin # code coverage
       bacon
+      cargo-tarpaulin # code coverage
+      cargo-udeps # unused deps
     ];
     ci = [
       rust.toolchains.ci
-      cargo-udeps # unused deps
+      cargo-tarpaulin # code coverage
     ];
+  };
+
+  shells = {
+    dev = pkgs.mkShellNoCC {
+      packages = devShells.default.nativeBuildInputs ++ packages.dev;
+    };
+    ci = pkgs.mkShellNoCC {
+      packages = packages.ci;
+    };
   };
 
   rust = rec {
@@ -29,7 +40,6 @@ rec {
     ];
     extensions-ci = [
       "clippy"
-      "llvm-tools-preview"
     ];
 
     toolchains.default = "!toolchains.{{toolchain}}!";
