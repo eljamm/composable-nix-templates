@@ -40,14 +40,23 @@ let
     "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
 
     packages = { };
-    shell = pkgs.mkShellNoCC {
+
+    shells.default = pkgs.mkShellNoCC {
       packages = [
         formatter
-      ] ++ "!{{template_name}}!".packages or [ ];
+      ];
     };
+    ## {{#if (eq template_name "rust-nix")}}
+    shells.dev = pkgs.mkShellNoCC {
+      packages = shells.default.nativeBuildInputs ++ "!{{template_name}}!".packages.dev or [ ];
+    };
+    shells.ci = pkgs.mkShellNoCC {
+      packages = "!{{template_name}}!".packages.ci or [ ];
+    };
+    ## {{/if}}
 
     flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages;
-    flake.devShells.default = shell;
+    flake.devShells = shells;
     flake.formatter = formatter;
   };
 in
