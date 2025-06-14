@@ -44,4 +44,4 @@ let
     flake.devShells.default = shell;
   };
 in
-default // args
+args // default // default.packages
