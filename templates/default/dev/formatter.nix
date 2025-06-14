@@ -9,7 +9,7 @@ let
   treefmt-nix = import inputs.treefmt-nix;
 
   treefmt = treefmt-nix.mkWrapper pkgs {
-    projectRootFile = "flake.nix";
+    projectRootFile = "default.nix";
     programs.nixfmt.enable = true;
     programs.actionlint.enable = true;
   };
@@ -30,7 +30,9 @@ let
         ${pre-commit-hook.shellHook}
       }
 
-      shell-hook
+      if [[ -e .git ]]; then
+        shell-hook
+      fi
       treefmt
     '';
   };
