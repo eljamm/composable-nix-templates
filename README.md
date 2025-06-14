@@ -17,6 +17,11 @@ templates/
 │   │   └── lib.nix
 │   ├── flake.ffizer.hbs.nix
 │   └── statix.toml
+├── default
+│   ├── dev
+│   │   └── formatter.nix
+│   ├── default.nix
+│   └── flake.nix
 ├── go
 │   └── _basic -> ../basic
 └── rust
