@@ -31,16 +31,17 @@ let
 
   formatter = import ./dev/formatter.nix args;
 
-  default = {
-    inherit
-      formatter
-      ;
-
+  default = rec {
+    packages = { };
     shell = pkgs.mkShellNoCC {
       packages = [
         formatter
       ];
     };
+
+    flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages;
+    flake.devShells.default = shell;
+    flake.formatter = formatter;
   };
 in
 default // args
