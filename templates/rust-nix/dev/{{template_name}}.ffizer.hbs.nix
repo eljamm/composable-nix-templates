@@ -2,8 +2,10 @@
   devShells,
   pkgs,
   ...
-}:
+}@args:
 rec {
+  crates = import ../dev/crates args;
+
   packages = with pkgs; rec {
     default = [
       rust.toolchains.default

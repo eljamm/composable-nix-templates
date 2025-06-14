@@ -43,7 +43,11 @@ let
   default = rec {
     "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
 
+    ## {{#if (eq template_name "rust-nix")}}
+    #! packages = "!{{template_name}}!".crates;
+    ## {{else}}
     packages = { };
+    ## {{/if}}
 
     shells = {
       default = pkgs.mkShellNoCC {
