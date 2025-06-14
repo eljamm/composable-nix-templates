@@ -25,8 +25,13 @@ let
     ''
   ) (getTemplates templatesDir);
 
+  # required for running: bash $(nix-build -A <template_name>)
+  bin = lib.mapAttrs (
+    name: value: pkgs.writeScript "${name}-bin" "${lib.getExe value} \"$@\""
+  ) ffizer-packages;
+
   docs = pkgs.writeShellScriptBin "process-docs" ''
     ${lib.getExe pkgs.mdsh}
   '';
 in
-ffizer-packages // { inherit docs; }
+ffizer-packages // { inherit docs bin; }
