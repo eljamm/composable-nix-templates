@@ -1,20 +1,24 @@
 {
   lib,
-  rustPlatform,
+  craneLib,
+  crateInfo,
   pkg-config,
   openssl,
 }:
 
-rustPlatform.buildRustPackage (finalAttrs: {
-  pname = "hello";
-  version = "0.0.0";
+craneLib.buildPackage rec {
+  inherit (crateInfo src) pname version;
 
-  src = ../../.;
+  src = craneLib.cleanCargoSource ../../.;
 
-  cargoLock.lockFile = "${finalAttrs.src}/Cargo.lock";
+  cargoLock = "${src}/Cargo.lock";
   strictDeps = true;
 
-  nativeBuildInputs = [ pkg-config ];
+  nativeBuildInputs = [
+    pkg-config
+  ];
 
-  buildInputs = [ openssl ];
-})
+  buildInputs = [
+    openssl
+  ];
+}

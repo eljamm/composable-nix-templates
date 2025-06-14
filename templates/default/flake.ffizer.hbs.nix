@@ -4,8 +4,9 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     ## {{#if (eq template_name "rust-nix") }}
-    rust-overlay.url = "github:oxalica/rust-overlay";
+    crane.url = "github:ipetkov/crane";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    rust-overlay.url = "github:oxalica/rust-overlay";
     ## {{/if}}
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
