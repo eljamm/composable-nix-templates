@@ -34,14 +34,15 @@ let
     packages = import ./dev/packages.nix args;
 
     shell = pkgs.mkShellNoCC {
-      packages = (builtins.attrValues packages) ++ [
+      nativeBuildInputs = (lib.attrValues packages.scripts) ++ [
+        packages.docs
         pkgs.ffizer
         pkgs.mdsh
       ];
     };
 
-    flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages;
+    flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages.scripts;
     flake.devShells.default = shell;
   };
 in
-args // default // default.packages.bin
+args // default // default.packages.scripts-bin

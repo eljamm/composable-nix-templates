@@ -8,7 +8,7 @@ let
   getTemplates = dir: lib.filterAttrs (_: type: type == "directory") (builtins.readDir dir);
   templatesDir = ../templates;
 
-  ffizer-packages = lib.mapAttrs (
+  scripts = lib.mapAttrs (
     name: _:
     pkgs.writeShellScriptBin "${name}" ''
       export SOURCE_DIR="${self.outPath}"
@@ -26,12 +26,18 @@ let
   ) (getTemplates templatesDir);
 
   # required for running: bash $(nix-build -A <template_name>)
-  bin = lib.mapAttrs (
+  scripts-bin = lib.mapAttrs (
     name: value: pkgs.writeScript "${name}-bin" "${lib.getExe value} \"$@\""
-  ) ffizer-packages;
+  ) scripts;
 
-  docs = pkgs.writeShellScriptBin "process-docs" ''
+  docs = pkgs.writeShellScriptBin "docs" ''
     ${lib.getExe pkgs.mdsh}
   '';
 in
-ffizer-packages // { inherit docs bin; }
+{
+  inherit
+    docs
+    scripts
+    scripts-bin
+    ;
+}
