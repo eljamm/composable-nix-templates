@@ -1,12 +1,12 @@
 {
   pkgs,
-  sources,
+  inputs,
   system,
   ...
 }:
 let
-  git-hooks = import sources.git-hooks { inherit system; };
-  treefmt-nix = import sources.treefmt-nix;
+  git-hooks = import inputs.git-hooks { inherit system; };
+  treefmt-nix = import inputs.treefmt-nix;
 
   treefmt = treefmt-nix.mkWrapper pkgs {
     projectRootFile = "flake.nix";

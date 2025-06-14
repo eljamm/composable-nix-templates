@@ -10,14 +10,14 @@ in
   self ? import-flake {
     src = ./.;
   },
-  sources ? self.inputs,
+  inputs ? self.inputs,
   system ? builtins.currentSystem,
-  pkgs ? import sources.nixpkgs {
+  pkgs ? import inputs.nixpkgs {
     config = { };
     overlays = [ ];
     inherit system;
   },
-  lib ? import "${sources.nixpkgs}/lib",
+  lib ? import "${inputs.nixpkgs}/lib",
 }:
 let
   args = {
@@ -25,7 +25,7 @@ let
       lib
       pkgs
       system
-      sources
+      inputs
       ;
   };
 
