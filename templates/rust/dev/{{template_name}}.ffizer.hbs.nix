@@ -45,7 +45,7 @@ rec {
     ];
 
     toolchains.default = "!toolchains.{{toolchain}}!";
-    toolchains.ci = "!toolchains.{{toolchain}}!".override { extensions = extensions-ci; };
+    toolchains.ci = toolchains.default.override { extensions = extensions-ci; };
     toolchains.stable = pkgs.rust-bin.stable.latest.minimal.override { inherit extensions; };
     toolchains.nightly = pkgs.rust-bin.selectLatestNightlyWith (
       toolchain: toolchain.minimal.override { inherit extensions; }

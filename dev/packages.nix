@@ -30,9 +30,7 @@ let
     name: value: pkgs.writeScript "${name}-bin" "${lib.getExe value} \"$@\""
   ) scripts;
 
-  docs = pkgs.writeShellScriptBin "docs" ''
-    ${lib.getExe pkgs.mdsh}
-  '';
+  docs = pkgs.writeShellScriptBin "docs" "${lib.getExe pkgs.mdsh}";
 in
 {
   inherit
