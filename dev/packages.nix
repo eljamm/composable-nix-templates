@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  self,
   ...
 }:
 let
@@ -10,7 +11,7 @@ let
   ffizer-packages = lib.mapAttrs (
     name: _:
     pkgs.writeShellScriptBin "${name}" ''
-      export SOURCE_DIR="${./.}"
+      export SOURCE_DIR="${self.outPath}"
       export TEMPLATES_DIR="/tmp/ffizer-${name}"
 
       cp -R "$SOURCE_DIR/." "$TEMPLATES_DIR"
@@ -24,12 +25,8 @@ let
     ''
   ) (getTemplates templatesDir);
 
-  packages-bin = lib.mapAttrs (
-    name: value: pkgs.writeScript "${name}-bin" "${lib.getExe value} \"$@\""
-  ) ffizer-packages;
-
   docs = pkgs.writeShellScriptBin "process-docs" ''
     ${lib.getExe pkgs.mdsh}
   '';
 in
-packages-bin // { inherit docs; }
+ffizer-packages // { inherit docs; }

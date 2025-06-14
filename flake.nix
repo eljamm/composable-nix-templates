@@ -7,10 +7,10 @@
   };
 
   outputs =
-    { flake-utils, ... }@inputs:
+    { self, flake-utils, ... }@inputs:
     flake-utils.lib.eachDefaultSystem (
       system:
       # get flake attributes from default.nix
-      (import ./default.nix { inherit inputs system; }).flake
+      (import ./default.nix { inherit self inputs system; }).flake
     );
 }
