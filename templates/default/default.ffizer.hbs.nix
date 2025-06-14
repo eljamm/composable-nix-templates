@@ -14,7 +14,7 @@ in
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs {
     config = { };
-    ## {{#if (eq template_name "rust-nix")}}
+    ## {{#if (eq template_name "rust")}}
     #! overlays = [ inputs.rust-overlay.overlays.default ];
     ## {{else}}
     #! overlays = [ ];
@@ -43,7 +43,7 @@ let
   default = rec {
     "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
 
-    ## {{#if (eq template_name "rust-nix")}}
+    ## {{#if (eq template_name "rust")}}
     #! packages = "!{{template_name}}!".crates;
     ## {{else}}
     packages = { };

@@ -8,8 +8,8 @@ variables:
       - label: "Nightly"
         value: "nightly"
 ignores:
-  - _basic
+  - _default
 imports:
   - uri: "{{ ffizer_src_uri }}"
     rev: "{{ ffizer_src_rev }}"
-    subfolder: "_basic"
+    subfolder: "_default"

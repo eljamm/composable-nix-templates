@@ -3,7 +3,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
-    ## {{#if (eq template_name "rust-nix") }}
+    ## {{#if (eq template_name "rust") }}
     crane.url = "github:ipetkov/crane";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.url = "github:oxalica/rust-overlay";
