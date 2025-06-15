@@ -16,6 +16,8 @@ variables:
         value: "default"
       - label: "Rust"
         value: "rust"
+      - label: "Go"
+        value: "go"
 ignores:
   - .git
 scripts:
