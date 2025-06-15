@@ -10,12 +10,8 @@ templates/
 ├── basic
 │   ├── nix
 │   │   ├── modules
-│   │   │   ├── aliases.ffizer.hbs.nix
-│   │   │   ├── devShells.ffizer.hbs.nix
-│   │   │   ├── formatting.ffizer.hbs.nix
-│   │   │   └── infra.ffizer.hbs.nix
+│   │   │   └── aliases.ffizer.hbs.nix
 │   │   └── lib.nix
-│   ├── flake.ffizer.hbs.nix
 │   └── statix.toml
 ├── default
 │   ├── dev
