@@ -20,11 +20,13 @@ templates/
 ├── default
 │   ├── dev
 │   │   ├── cleanup.sh
-│   │   └── formatter.nix
+│   │   └── formatter.ffizer.hbs.nix
 │   ├── default.ffizer.hbs.nix
 │   └── flake.ffizer.hbs.nix
 ├── go
-│   └── _basic -> ../basic
+│   ├── _default -> ../default
+│   └── dev
+│       └── {{template_name}}.ffizer.hbs.nix
 └── rust
     ├── _default -> ../default
     ├── dev
