@@ -42,12 +42,11 @@ let
     ## {{/if}}
   };
 
-  pre-commit-hook = pkgs.mkShellNoCC {
-    packages = [ treefmt ];
-    shellHook = ''
+  pre-commit-hook = pkgs.writeShellScriptBin "git-hooks" ''
+    if [[ -d .git ]]; then
       ${with git-hooks.lib.git-hooks; pre-commit (wrap.abort-on-change treefmt)}
-    '';
-  };
+    fi
+  '';
 
   formatter = pkgs.writeShellApplication {
     name = "formatter";
@@ -55,10 +54,10 @@ let
     text = ''
       # shellcheck disable=all
       shell-hook () {
-        ${pre-commit-hook.shellHook}
+        ${pre-commit-hook}
       }
 
-      if [[ -e .git ]]; then
+      if [[ -d .git ]]; then
         shell-hook
       fi
       treefmt
