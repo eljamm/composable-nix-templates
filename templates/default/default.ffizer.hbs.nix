@@ -34,6 +34,7 @@ let
       ;
     inherit (default)
       packages
+      "!{{template_name}}!"
       ;
     devShells = default.shells;
   };

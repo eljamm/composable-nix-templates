@@ -17,7 +17,7 @@ let
     programs.rustfmt = {
       enable = true;
       edition = "2024";
-      package = args.rust.rust.toolchain.availableComponents.rustfmt;
+      package = args.rust.toolchains.default.availableComponents.rustfmt;
     };
     programs.taplo.enable = true; # TOML
     ## {{else if (eq template_name "go")}}
@@ -54,7 +54,7 @@ let
     text = ''
       # shellcheck disable=all
       shell-hook () {
-        ${pre-commit-hook}
+        ${lib.getExe pre-commit-hook}
       }
 
       if [[ -d .git ]]; then

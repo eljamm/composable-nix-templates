@@ -8,7 +8,7 @@ rec {
 
   packages = with pkgs; rec {
     default = [
-      rust.toolchains.default
+      toolchains.default
       cargo-auditable
     ];
     dev = default ++ [
@@ -17,7 +17,7 @@ rec {
       cargo-udeps # unused deps
     ];
     ci = [
-      rust.toolchains.ci
+      toolchains.ci
       cargo-tarpaulin # code coverage
     ];
   };
@@ -31,24 +31,22 @@ rec {
     };
   };
 
-  rust = rec {
-    extensions = [
-      "cargo"
-      "clippy"
-      "rust-src"
-      "rustc"
-      "rustfmt"
-      "rust-analyzer"
-    ];
-    extensions-ci = [
-      "clippy"
-    ];
+  extensions = [
+    "cargo"
+    "clippy"
+    "rust-src"
+    "rustc"
+    "rustfmt"
+    "rust-analyzer"
+  ];
+  extensions-ci = [
+    "clippy"
+  ];
 
-    toolchains.default = "!toolchains.{{toolchain}}!";
-    toolchains.ci = toolchains.default.override { extensions = extensions-ci; };
-    toolchains.stable = pkgs.rust-bin.stable.latest.minimal.override { inherit extensions; };
-    toolchains.nightly = pkgs.rust-bin.selectLatestNightlyWith (
-      toolchain: toolchain.minimal.override { inherit extensions; }
-    );
-  };
+  toolchains.default = "!toolchains.{{toolchain}}!";
+  toolchains.ci = toolchains.default.override { extensions = extensions-ci; };
+  toolchains.stable = pkgs.rust-bin.stable.latest.minimal.override { inherit extensions; };
+  toolchains.nightly = pkgs.rust-bin.selectLatestNightlyWith (
+    toolchain: toolchain.minimal.override { inherit extensions; }
+  );
 }
