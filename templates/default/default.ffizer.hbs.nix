@@ -36,10 +36,11 @@ let
       packages
       "!{{template_name}}!"
       ;
+    devLib = default.legacyPackages.lib;
     devShells = default.shells;
   };
 
-  formatter = import ./dev/formatter.nix args;
+  formatter = import ./nix/formatter.nix args;
 
   default = rec {
     "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
@@ -49,6 +50,7 @@ let
     ## {{else}}
     packages = { };
     ## {{/if}}
+    legacyPackages.lib = pkgs.callPackage ./nix/lib.nix { };
 
     shells = {
       default = pkgs.mkShellNoCC {
@@ -56,11 +58,22 @@ let
           formatter
         ];
       };
-    } // "!{{template_name}}!".shells or { };
+    }
+    // ("!{{template_name}}!".shells or { });
 
-    flake.packages = lib.filterAttrs (n: v: lib.isDerivation v) packages;
-    flake.devShells = shells;
-    flake.formatter = formatter;
+    inherit flake;
+  };
+
+  flake = {
+    inherit (default)
+      formatter
+      legacyPackages
+      ;
+    inherit (default.rust)
+      apps
+      ;
+    devShells = default.shells;
+    packages = lib.filterAttrs (n: v: lib.isDerivation v) default.packages;
   };
 in
 default // args
