@@ -33,6 +33,7 @@ let
       inputs
       ;
     inherit (default)
+      formatter
       packages
       "!{{template_name}}!"
       ;
@@ -40,26 +41,17 @@ let
     devShells = default.shells;
   };
 
-  formatter = import ./nix/formatter.nix args;
-
   default = rec {
+    formatter = import ./nix/formatter.nix args;
     "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
 
+    legacyPackages.lib = pkgs.callPackage ./nix/lib.nix { };
     ## {{#if (eq template_name "rust")}}
     #! packages = "!{{template_name}}!".crates;
     ## {{else}}
     packages = { };
     ## {{/if}}
-    legacyPackages.lib = pkgs.callPackage ./nix/lib.nix { };
-
-    shells = {
-      default = pkgs.mkShellNoCC {
-        packages = [
-          formatter
-        ];
-      };
-    }
-    // ("!{{template_name}}!".shells or { });
+    shells = "!{{template_name}}!".shells or { };
 
     inherit flake;
   };
@@ -68,9 +60,6 @@ let
     inherit (default)
       formatter
       legacyPackages
-      ;
-    inherit (default.rust)
-      apps
       ;
     devShells = default.shells;
     packages = lib.filterAttrs (n: v: lib.isDerivation v) default.packages;

@@ -4,7 +4,7 @@
   ...
 }@args:
 {
-  shells.dev = pkgs.mkShellNoCC {
+  shells.default = pkgs.mkShellNoCC {
     packages =
       with pkgs;
       [
