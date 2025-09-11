@@ -35,7 +35,7 @@ let
 
   default = rec {
     formatter = import ./nix/formatter.nix args;
-    "!{{template_name}}!" = import "!./dev/{{template_name}}.nix!" args;
+    "!{{template_name}}!" = import "!./nix/{{template_name}}.nix!" args;
 
     legacyPackages.lib = pkgs.callPackage ./nix/lib.nix { };
     ## {{#if (eq template_name "rust")}}
