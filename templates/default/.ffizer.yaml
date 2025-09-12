@@ -18,12 +18,14 @@ variables:
         value: "rust"
       - label: "Go"
         value: "go"
+      - label: "Zig"
+        value: "zig"
 ignores:
   - .git
 scripts:
   - default_confirm_answer: "true"
     cmd: |
-      ./dev/cleanup.sh && rm ./dev/cleanup.sh
+      ./nix/cleanup.sh && rm ./nix/cleanup.sh
 
       # format files
       nix fmt
