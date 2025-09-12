@@ -7,33 +7,35 @@ By leveraging the [ffizer](https://github.com/ffizer/ffizer) scaffolding tool, y
 
 ```shellSession
 templates/
-├── basic
-│   ├── nix
-│   │   ├── modules
-│   │   │   └── aliases.ffizer.hbs.nix
-│   │   └── lib.nix
-│   └── statix.toml
 ├── default
-│   ├── dev
+│   ├── nix
+│   │   ├── utils
+│   │   │   ├── import-flake.nix
+│   │   │   └── saveFromGC.nix
 │   │   ├── cleanup.sh
-│   │   └── formatter.ffizer.hbs.nix
+│   │   ├── formatter.ffizer.hbs.nix
+│   │   └── lib.ffizer.hbs.nix
 │   ├── default.ffizer.hbs.nix
 │   └── flake.ffizer.hbs.nix
 ├── go
 │   ├── _default -> ../default
-│   └── dev
+│   └── nix
 │       └── {{template_name}}.ffizer.hbs.nix
-└── rust
+├── rust
+│   ├── _default -> ../default
+│   ├── nix
+│   │   ├── crates
+│   │   │   ├── default.nix
+│   │   │   └── hello.nix
+│   │   └── {{template_name}}.ffizer.hbs.nix
+│   ├── src
+│   │   └── main.rs
+│   ├── Cargo.lock
+│   └── Cargo.toml
+└── zig
     ├── _default -> ../default
-    ├── dev
-    │   ├── crates
-    │   │   ├── default.nix
-    │   │   └── hello.nix
-    │   └── {{template_name}}.ffizer.hbs.nix
-    ├── src
-    │   └── main.rs
-    ├── Cargo.lock
-    └── Cargo.toml
+    └── nix
+        └── {{template_name}}.ffizer.hbs.nix
 ```
 
 For more details regarding the templating sytax and command-line arguments used throughout this project, check out [ffizer's documentation](https://ffizer.github.io/ffizer/book/overview.html).
@@ -72,8 +74,8 @@ bash $(nix-build -A rust) test/rust --update-mode override
 
 # TODO
 
+- [x] Refactor templates to use default.nix
 - [ ] CI/CD workflows
   - [ ] template verification
   - [ ] process documentation
-- [ ] Refactor templates
 - [ ] Improve documentation
