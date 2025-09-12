@@ -1,7 +1,7 @@
 {
   pkgs,
   devLib,
-  formatter,
+  format,
   ...
 }@args:
 rec {
@@ -50,13 +50,15 @@ rec {
       # Nix
       nbb = "nix build --show-trace --print-build-logs";
       nrr = "nix run --show-trace --print-build-logs";
+
+      fmt = format.formatter;
     };
   };
 
   shells = {
     default = pkgs.mkShellNoCC {
       packages = [
-        formatter
+        format.formatter
       ]
       ++ packages.dev;
     };

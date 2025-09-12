@@ -25,7 +25,7 @@ let
       inputs
       ;
     inherit (default)
-      formatter
+      format
       packages
       "!{{template_name}}!"
       ;
@@ -34,7 +34,7 @@ let
   };
 
   default = rec {
-    formatter = import ./nix/formatter.nix args;
+    format = import ./nix/formatter.nix args;
     "!{{template_name}}!" = import "!./nix/{{template_name}}.nix!" args;
 
     legacyPackages.lib = pkgs.callPackage ./nix/lib.nix { };
@@ -49,10 +49,8 @@ let
   };
 
   flake = {
-    inherit (default)
-      formatter
-      legacyPackages
-      ;
+    inherit (default) legacyPackages;
+    inherit (default.format) formatter;
     devShells = default.shells;
     packages = lib.filterAttrs (n: v: lib.isDerivation v) default.packages;
   };
