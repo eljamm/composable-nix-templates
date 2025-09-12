@@ -35,6 +35,15 @@ let
         "-apply-to-generated-files"
       ];
     };
+    ## {{else if (eq template_name "zig")}}
+    settings.formatter.zig = {
+      command = "${lib.getExe' args.zig.zig-default "zig"}";
+      options = [ "fmt" ];
+      includes = [
+        "*.zig"
+        "*.zon"
+      ];
+    };
     ## {{else}}
     ## {{/if}}
   };

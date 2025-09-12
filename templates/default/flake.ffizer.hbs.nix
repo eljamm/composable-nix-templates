@@ -7,6 +7,9 @@
     crane.url = "github:ipetkov/crane";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.url = "github:oxalica/rust-overlay";
+    ## {{else if (eq template_name "zig") }}
+    zig-overlay.url = "github:mitchellh/zig-overlay";
+    zig-overlay.flake = false;
     ## {{/if}}
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
