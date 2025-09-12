@@ -22,6 +22,6 @@ rec {
   };
 
   aliases = devLib.mkAliases {
-    fmt = format.formatter;
+    ff = format.formatter;
   };
 }

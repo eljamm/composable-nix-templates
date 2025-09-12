@@ -51,7 +51,7 @@ rec {
       nbb = "nix build --show-trace --print-build-logs";
       nrr = "nix run --show-trace --print-build-logs";
 
-      fmt = format.formatter;
+      ff = format.formatter;
     };
   };
 
