@@ -1,6 +1,11 @@
 {
   lib,
   writeShellApplication,
+  ## {{#if (eq template_name "rust")}}
+  mkShell,
+  useMoldLinker,
+  gccStdenv,
+  ## {{/if}}
   ...
 }:
 rec {
@@ -20,4 +25,12 @@ rec {
       type = "app";
       program = attrsToApp name value;
     }) apps;
+
+  ## {{#if (eq template_name "rust")}}
+  mkShellMold =
+    attrs:
+    mkShell.override {
+      stdenv = useMoldLinker gccStdenv;
+    } attrs;
+  ## {{/if}}
 }

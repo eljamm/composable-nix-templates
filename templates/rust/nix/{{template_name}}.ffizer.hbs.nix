@@ -56,13 +56,13 @@ rec {
   };
 
   shells = {
-    default = pkgs.mkShellNoCC {
+    default = devLib.mkShellMold {
       packages = [
         format.formatter
       ]
       ++ packages.dev;
     };
-    ci = pkgs.mkShellNoCC {
+    ci = devLib.mkShellMold {
       packages = packages.ci;
     };
   };
