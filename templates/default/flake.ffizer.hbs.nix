@@ -20,9 +20,9 @@
 
   outputs =
     { self, ... }@inputs:
-    inputs.flake-utils.lib.eachDefaultSystem (
-      system:
-      # get flake attributes from default.nix
-      (import ./default.nix { inherit self inputs system; }).flake
-    );
+    let
+      default = import ./. { inherit self inputs; };
+      mkSystemFlake = system: (import ./. { inherit self inputs system; }).flake.perSystem;
+    in
+    (inputs.flake-utils.lib.eachDefaultSystem mkSystemFlake) // default.flake.system-agnostic;
 }

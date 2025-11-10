@@ -1,7 +1,5 @@
 {
-  self ? import ./nix/utils/import-flake.nix {
-    src = ./.;
-  },
+  self ? import ./nix/utils/import-flake.nix { src = ./.; },
   inputs ? self.inputs,
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs {
@@ -16,43 +14,50 @@
   lib ? import "${inputs.nixpkgs}/lib",
 }:
 let
-  args = {
-    inherit
-      lib
-      pkgs
-      self
-      system
-      inputs
-      ;
-    inherit (default)
-      format
-      packages
-      "!{{template_name}}!"
-      ;
-    devLib = default.legacyPackages.lib;
-    devShells = default.shells;
-  };
+  scope = lib.makeScope pkgs.newScope (
+    self': with self'; {
+      inherit
+        lib
+        pkgs
+        self
+        system
+        inputs
+        ;
 
-  default = rec {
-    format = import ./nix/formatter.nix args;
-    "!{{template_name}}!" = import "!./nix/{{template_name}}.nix!" args;
+      # Custom library. Contains helper functions, builders, ...
+      devLib = callPackage ./nix/utils.nix { };
+      ## {{#unless (eq template_name "default")}}
+      "!{{template_name}}!" = import "!./nix/{{template_name}}.nix!" args;
+      ## {{/unless}}
 
-    legacyPackages.lib = pkgs.callPackage ./nix/lib.nix { };
-    ## {{#if (eq template_name "rust")}}
-    #! packages = "!{{template_name}}!".crates;
-    ## {{else}}
-    packages = { };
-    ## {{/if}}
-    shells = "!{{template_name}}!".shells or { };
+      format = callPackage ./nix/formatter.nix { };
+      ## {{#if (eq template_name "rust")}}
+      #! devPkgs = "!{{template_name}}!".crates;
+      ## {{else}}
+      devPkgs = lib.filterAttrs (n: v: lib.isDerivation v) (callPackage ./nix/packages.nix { });
+      ## {{/if}}
+      devShells.default = pkgs.mkShellNoCC {
+        packages = [
+          format.formatter
+        ];
+      };
 
-    inherit flake;
-  };
+      overlays.default = final: prev: devPkgs;
 
-  flake = {
-    inherit (default) legacyPackages;
-    inherit (default.format) formatter;
-    devShells = default.shells;
-    packages = lib.filterAttrs (n: v: lib.isDerivation v) default.packages;
-  };
+      flake.system-agnostic = {
+        inherit overlays;
+      };
+      flake.perSystem = {
+        devShells = devShells;
+        formatter = format.formatter;
+        packages = devPkgs;
+        checks = lib.filterAttrs (_: v: !v.meta.broken or false) flake.perSystem.packages;
+        legacyPackages = {
+          lib = devLib;
+          packages = devPkgs;
+        };
+      };
+    }
+  );
 in
-default // args
+scope // scope.devPkgs
