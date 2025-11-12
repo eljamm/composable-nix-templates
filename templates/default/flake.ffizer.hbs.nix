@@ -18,6 +18,7 @@
     git-hooks.flake = false;
   };
 
+  # construct flake from ./default.nix
   outputs =
     { self, ... }@inputs:
     let
