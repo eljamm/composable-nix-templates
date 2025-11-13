@@ -27,5 +27,12 @@ scripts:
     cmd: |
       ./nix/cleanup.sh && rm ./nix/cleanup.sh
 
+      # stage files, else flake won't work
+      if ! command -v git &>/dev/null; then
+        nix-shell -p gitMinimal --run 'git add .'
+      else
+        git add .
+      fi
+
       # format files
       nix fmt
