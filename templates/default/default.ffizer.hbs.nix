@@ -1,5 +1,5 @@
 {
-  self ? import ./nix/utils/import-flake.nix { src = ./.; },
+  self ? import ./nix/import-flake.nix { src = ./.; },
   inputs ? self.inputs,
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs {
@@ -26,20 +26,20 @@ let
     # Custom library. Contains helper functions, builders, ...
     devLib = sc.callPackage ./nix/lib.nix { };
     ## {{#unless (eq template_name "default")}}
-    "!{{template_name}}!" = import "!./nix/{{template_name}}.nix!" sc.args;
+    "!{{template_name}}!" = sc.callPackage "!./nix/{{template_name}}.nix!" { };
     ## {{/unless}}
 
-    format = sc.callPackage ./nix/formatter.nix { };
+    formatter = sc.callPackage ./nix/formatter.nix { };
     ## {{#if (eq template_name "default")}}
     #! devPkgs = { };
     ## {{else if (eq template_name "rust")}}
-    #! devPkgs = final."!{{template_name}}!".crates;
+    #! devPkgs = sc."!{{template_name}}!".crates;
     ## {{else}}
     devPkgs = lib.filterAttrs (n: v: lib.isDerivation v) (sc.callPackage ./nix/packages.nix { });
     ## {{/if}}
     devShells.default = pkgs.mkShellNoCC {
       packages = [
-        sc.format.formatter
+        sc.formatter.package
       ];
     };
 
@@ -47,7 +47,7 @@ let
 
     flake.perSystem = {
       devShells = sc.devShells;
-      formatter = sc.format.formatter;
+      formatter = sc.formatter.package;
       packages = sc.devPkgs;
       checks = lib.filterAttrs (_: v: !v.meta.broken or false) sc.flake.perSystem.packages;
       legacyPackages = {
@@ -55,7 +55,7 @@ let
         packages = sc.devPkgs;
       };
     };
-    flake.system-agnostic = {
+    flake.systemAgnostic = {
       inherit (sc) overlays;
     };
   });

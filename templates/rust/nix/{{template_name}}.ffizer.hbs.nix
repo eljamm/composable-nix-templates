@@ -1,11 +1,12 @@
 {
   pkgs,
   devLib,
-  format,
+  formatter,
+  callPackage,
   ...
 }@args:
 rec {
-  crates = import ./crates args;
+  crates = callPackage ./crates { };
 
   packages = with pkgs; rec {
     default = [
@@ -51,14 +52,14 @@ rec {
       nbb = "nix build --show-trace --print-build-logs";
       nrr = "nix run --show-trace --print-build-logs";
 
-      ff = format.formatter;
+      ff = formatter.package;
     };
   };
 
   shells = {
     default = devLib.mkShellMold {
       packages = [
-        format.formatter
+        formatter.package
       ]
       ++ packages.dev;
     };

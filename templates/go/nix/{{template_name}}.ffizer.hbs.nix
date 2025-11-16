@@ -1,7 +1,7 @@
 {
   pkgs,
   devLib,
-  format,
+  formatter,
   ...
 }@args:
 rec {
@@ -10,7 +10,7 @@ rec {
       with pkgs;
       [
         go
-        format.formatter
+        formatter.package
 
         # LSP
         delve # debugger
@@ -45,6 +45,6 @@ rec {
       gotestsum --format testname "$@"
     '';
 
-    ff = format.formatter;
+    ff = formatter.package;
   };
 }

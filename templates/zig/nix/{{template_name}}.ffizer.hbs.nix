@@ -3,7 +3,7 @@
   inputs,
   system,
   devLib,
-  format,
+  formatter,
   ...
 }@args:
 rec {
@@ -14,7 +14,7 @@ rec {
     packages =
       with pkgs;
       [
-        format.formatter
+        formatter.package
         zig-default
         zls_0_15
       ]
@@ -22,6 +22,6 @@ rec {
   };
 
   aliases = devLib.mkAliases {
-    ff = format.formatter;
+    ff = formatter.package;
   };
 }
