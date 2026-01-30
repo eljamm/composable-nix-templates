@@ -1,5 +1,9 @@
 {
-  self ? import ./nix/import-flake.nix { src = ./.; },
+  flake-inputs ? import (fetchTarball {
+    url = "https://github.com/fricklerhandwerk/flake-inputs/tarball/4.1.0";
+    sha256 = "1j57avx2mqjnhrsgq3xl7ih8v7bdhz1kj3min6364f486ys048bm";
+  }),
+  self ? flake-inputs.import-flake { src = ./.; },
   inputs ? self.inputs,
   system ? builtins.currentSystem,
   pkgs ? import inputs.nixpkgs {
@@ -14,50 +18,43 @@
   lib ? import "${inputs.nixpkgs}/lib",
 }:
 let
-  scope = lib.makeScope pkgs.newScope (sc: {
+  default = lib.makeScope pkgs.newScope (def: {
     inherit
       lib
       pkgs
       self
       system
       inputs
+      flake
       ;
 
     # Custom library. Contains helper functions, builders, ...
-    devLib = sc.callPackage ./nix/lib.nix { };
+    devLib = def.callPackage ./nix/lib.nix { };
     ## {{#unless (eq template_name "default")}}
-    "!{{template_name}}!" = sc.callPackage "!./nix/{{template_name}}.nix!" { };
+    "!{{template_name}}!" = def.callPackage "!./nix/{{template_name}}.nix!" { };
     ## {{/unless}}
 
-    formatter = sc.callPackage ./nix/formatter.nix { };
+    formatter = def.callPackage ./nix/formatter.nix { };
     ## {{#if (eq template_name "default")}}
     #! devPkgs = { };
     ## {{else if (eq template_name "rust")}}
-    #! devPkgs = sc."!{{template_name}}!".crates;
+    #! devPkgs = def."!{{template_name}}!".crates;
     ## {{else}}
-    devPkgs = lib.filterAttrs (n: v: lib.isDerivation v) (sc.callPackage ./nix/packages.nix { });
+    devPkgs = def.callPackage ./nix/packages.nix { };
     ## {{/if}}
+
     devShells.default = pkgs.mkShellNoCC {
       packages = [
-        sc.formatter.package
+        def.formatter.package
       ];
     };
 
-    overlays.default = final: prev: sc.devPkgs;
-
-    flake.perSystem = {
-      devShells = sc.devShells;
-      formatter = sc.formatter.package;
-      packages = sc.devPkgs;
-      checks = lib.filterAttrs (_: v: !v.meta.broken or false) sc.flake.perSystem.packages;
-      legacyPackages = {
-        lib = sc.devLib;
-        packages = sc.devPkgs;
-      };
-    };
-    flake.systemAgnostic = {
-      inherit (sc) overlays;
-    };
+    overlays.default = final: prev: def.devPkgs;
   });
+
+  flake = default.callPackage ./nix/flake { };
+
+  # return final scope, with computed and non-recursive attributes
+  finalScope = default.packages default;
 in
-scope // scope.devPkgs
+finalScope
