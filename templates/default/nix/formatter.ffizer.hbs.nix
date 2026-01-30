@@ -14,9 +14,11 @@ lib.makeExtensible (self: {
 
   config = {
     projectRootFile = "default.nix";
+
     programs.nixfmt.enable = true;
     programs.actionlint.enable = true;
     programs.zizmor.enable = true;
+
     ## {{#if (eq template_name "rust")}}
     programs.rustfmt = {
       enable = true;
@@ -49,10 +51,20 @@ lib.makeExtensible (self: {
     };
     ## {{else}}
     ## {{/if}}
+
+    settings.formatter.editorconfig-checker = {
+      command = pkgs.editorconfig-checker;
+      includes = [ "*" ];
+      priority = 9; # last
+    };
   };
 
-  module = with self; treefmt.evalModule pkgs config;
+  # evaluated config
+  eval = self.treefmt.evalModule pkgs self.config;
 
-  package = with self; treefmt.mkWrapper pkgs config;
-  packages = with self; (treefmt.evalModule pkgs config).config.build.devShell.nativeBuildInputs;
+  # treefmt package
+  package = self.eval.config.build.wrapper;
+
+  # development shell that contains all formatters
+  shell = self.eval.config.build.devShell;
 })
