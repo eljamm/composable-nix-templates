@@ -58,10 +58,8 @@ rec {
 
   shells = {
     default = devLib.mkShellMold {
-      packages = [
-        formatter.package
-      ]
-      ++ packages.dev;
+      inputsFrom = formatter.shell;
+      packages = packages.dev;
     };
     ci = devLib.mkShellMold {
       packages = packages.ci;
