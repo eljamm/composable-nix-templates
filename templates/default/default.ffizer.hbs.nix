@@ -26,6 +26,7 @@ let
       system
       inputs
       flake
+      default
       ;
 
     # Custom library. Contains helper functions, builders, ...
