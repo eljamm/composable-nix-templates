@@ -45,6 +45,9 @@ let
     ## {{/if}}
 
     devShells.default = pkgs.mkShellNoCC {
+      ## {{#unless (eq template_name "default")}}
+      inputsFrom = [ def."!{{template_name}}!".shells.default ];
+      ## {{/unless}}
       packages = [
         def.formatter.package
       ];
