@@ -61,6 +61,7 @@ lib.makeExtensible (self: {
 
   # evaluated config
   eval = self.treefmt.evalModule pkgs self.config;
+  configFile = self.eval.config.build.configFile;
 
   # treefmt package
   package = self.eval.config.build.wrapper;

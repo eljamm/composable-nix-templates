@@ -26,32 +26,28 @@ let
       system
       inputs
       flake
-      default
+      default # recurse scope
       ;
 
     # Custom library. Contains helper functions, builders, ...
     devLib = def.callPackage ./nix/lib.nix { };
+
+    ## {{#unless (eq template_name "default")}}
+    #! devPkgs = def."!{{template_name}}!".crates;
+    ## {{/unless}}
+
+    ## {{#if (eq template_name "rust")}}
+    #! devPkgs = def."!{{template_name}}!".crates;
+    ## {{else}}
+    #! devPkgs = { };
+    ## {{/if}}
+
     ## {{#unless (eq template_name "default")}}
     "!{{template_name}}!" = def.callPackage "!./nix/{{template_name}}.nix!" { };
     ## {{/unless}}
 
     formatter = def.callPackage ./nix/formatter.nix { };
-    ## {{#if (eq template_name "default")}}
-    #! devPkgs = { };
-    ## {{else if (eq template_name "rust")}}
-    #! devPkgs = def."!{{template_name}}!".crates;
-    ## {{else}}
-    devPkgs = def.callPackage ./nix/packages.nix { };
-    ## {{/if}}
-
-    devShells.default = pkgs.mkShellNoCC {
-      ## {{#unless (eq template_name "default")}}
-      inputsFrom = [ def."!{{template_name}}!".shells.default ];
-      ## {{/unless}}
-      packages = [
-        def.formatter.package
-      ];
-    };
+    shells = def.callPackage ./nix/shells.nix { };
 
     overlays.default = final: prev: def.devPkgs;
   });
