@@ -5,7 +5,7 @@
   ...
 }:
 {
-  devShells.default = pkgs.mkShellNoCC {
+  default = pkgs.mkShellNoCC {
     inputsFrom = [
       ## {{#unless (eq template_name "default")}}
       default."!{{template_name}}!".shells.default
