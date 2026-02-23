@@ -14,6 +14,8 @@ variables:
     select_in_values:
       - label: "Default"
         value: "default"
+      - label: "Elm"
+        value: "elm"
       - label: "Rust"
         value: "rust"
       - label: "Go"
