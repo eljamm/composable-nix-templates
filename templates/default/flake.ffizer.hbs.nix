@@ -27,7 +27,8 @@
         eachDefaultSystemPassThrough
         ;
 
-      importFlake = arg: (system: (import ./. { inherit self inputs system; }).flake.${arg} or { });
+      getDefault = system: (import ./. { inherit self inputs system; });
+      importFlake = arg: system: (getDefault system).flake.${arg} or { };
 
       # independant of system (e.g. nixosModules)
       systemAgnosticFlake = eachDefaultSystemPassThrough (importFlake "systemAgnostic");
