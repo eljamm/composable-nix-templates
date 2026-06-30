@@ -23,18 +23,23 @@
     { self, ... }@inputs:
     let
       inherit (inputs.flake-utils.lib)
-        eachDefaultSystem
-        eachDefaultSystemPassThrough
+        eachSystem
+        eachSystemPassThrough
         ;
+
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
 
       getDefault = system: (import ./. { inherit self inputs system; });
       importFlake = arg: system: (getDefault system).flake.${arg} or { };
 
       # independant of system (e.g. nixosModules)
-      systemAgnosticFlake = eachDefaultSystemPassThrough (importFlake "systemAgnostic");
+      systemAgnosticFlake = eachSystemPassThrough systems (importFlake "systemAgnostic");
 
       # depends on system (e.g. packages.x86_64-linux)
-      perSystemFlake = eachDefaultSystem (importFlake "perSystem");
+      perSystemFlake = eachSystem systems (importFlake "perSystem");
     in
     systemAgnosticFlake // perSystemFlake;
 }
